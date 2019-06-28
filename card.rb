@@ -10,7 +10,8 @@ class Card
     @suit = suit
   end
 
-  def to_s
+  def to_s(hidden: false)
+    unless hidden
   "   ┌───────┐
    │#{rank[0]}      │
    │       │
@@ -18,5 +19,14 @@ class Card
    │       │
    │      #{rank[0]}│
    └───────┘"
+     else
+  '   ┌───────┐
+   │░░░░░░░│
+   │       │
+   │░░░░░░░│
+   │       │
+   │░░░░░░░│
+   └───────┘'
+    end
   end
 end

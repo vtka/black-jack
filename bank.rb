@@ -6,7 +6,7 @@ class Bank
   end
 
   def to_s
-    "Balance: #{@amount}$"
+    "Баланс: #{@amount}$"
   end
 
   def amount_zero?

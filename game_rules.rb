@@ -18,6 +18,10 @@ class GameRules
     'Ace': 11
   }
 
+  ACE_SCORE_DECISION_BREAKPOINT = 10
+
+  DEALER_DECISION_BREAKPOINT = 17
+
   MAX_CARDS = 3
 
   MAX_CARD_WARNING = 'У вас уже 3 карты.'
@@ -34,3 +38,7 @@ class GameRules
 
   DRAW_MESSAGE = 'Победила дружба!'
 end
+
+# game = GameRules.new
+
+# game.test

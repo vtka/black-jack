@@ -35,7 +35,7 @@ class Interface
   def first_round
     @game.shuffle_deck
     @game.initial_hand(@game.player_deck, @game.dealer_deck)
-    show_assets
+    show_assets(false)
   end
 
   def second_round
@@ -44,12 +44,14 @@ class Interface
     pass if choice == 1 || choice == 3
     hit(@game.player_deck) if choice == 2
     @game.dealer_turn
-    show_assets
+    show_assets(false)
   end
 
   def third_round
-    show_assets
-    puts 'Calculating points....'
+    puts 'Диллер открывает карты....'
+    sleep(2.0)
+    show_assets(true)
+    puts 'Идет подсчет очков....'
     p @game.game_bank
     sleep(2.0)
     @game.winner
@@ -65,17 +67,24 @@ class Interface
     @game.hand_card(deck)
   end
 
-  def show_assets
+  def print
+  end
+
+  def show_assets(last_round)
     system('clear')
     puts "#{@game.player.name}:"
     puts @game.player_bank
     InlinePrinter.new.print(@game.player_deck)
-    p @game.player_score
+    puts "Ваши очки: #{@game.player_score}"
     puts '--------------------'
     puts @game.dealer_bank
-    puts 'Dealer:'
-    InlinePrinter.new.print(@game.dealer_deck)
-    p @game.dealer_score
+    puts 'Диллер:'
+    if last_round == true
+      InlinePrinter.new.print(@game.dealer_deck)
+      puts puts "Очки диллера: #{@game.dealer_score}"
+    else
+      InlinePrinter.new.print_masked(@game.dealer_deck)
+    end
   end
 end
 

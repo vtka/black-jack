@@ -15,8 +15,6 @@ class Game
     @dealer_score = 0
   end
 
-  # change deck
-
   def winner
     if @player_score <= GameRules::BLACK_JACK && (@player_score > @dealer_score || @dealer_score > GameRules::BLACK_JACK)
       puts GameRules::PLAYER_WINNER_MESSAGE
@@ -53,7 +51,7 @@ class Game
   end
 
   def dealer_turn
-    if @dealer_score >= 17 || @dealer_deck.count >= GameRules::MAX_CARDS
+    if @dealer_score >= GameRules::DEALER_DECISION_BREAKPOINT || @dealer_deck.count >= GameRules::MAX_CARDS
       puts GameRules::DEALER_PASS
     else
       hand_card(@dealer_deck)
@@ -71,19 +69,26 @@ class Game
   end
 
   def score_counter
-    @player_score = 0 && @dealer_score = 0
+    @player_score = score_for(@player_deck)
+    @dealer_score = score_for(@dealer_deck)
+  end
+
+  def score_for(deck)
+    scorecard = 0
     GameRules::SCORE_BOARD.each do |rank, score|
-      @player_deck.each do |card|
+      deck.sort_by { |elem| Card::RANK.index elem }
+      deck.each do |card|
         if card.rank == rank.to_s
-          @player_score += score
-        end
-      end
-      @dealer_deck.each do |card|
-        if card.rank == rank.to_s
-          @dealer_score += score
+          if scorecard >= GameRules::ACE_SCORE_DECISION_BREAKPOINT
+            GameRules::SCORE_BOARD[:Ace] = 1
+            scorecard += score
+          else
+            scorecard += score
+          end
         end
       end
     end
+    scorecard
   end
 
   def bet
