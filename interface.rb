@@ -53,7 +53,6 @@ class Interface
     sleep(2.0)
     show_assets(true)
     puts 'Идет подсчет очков....'
-    p @game.game_bank
     sleep(2.0)
     @game.winner
     sleep(2.0)

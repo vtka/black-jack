@@ -12,10 +12,10 @@ class GameRules
     '8': 8,
     '9': 9,
     'X': 10,
-    'Jack': 10,
-    'Queen': 10,
-    'King': 10,
-    'Ace': 11
+    'J': 10,
+    'Q': 10,
+    'K': 10,
+    'A': 11
   }
 
   ACE_SCORE_DECISION_BREAKPOINT = 10
