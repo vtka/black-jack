@@ -88,6 +88,3 @@ class Interface
     end
   end
 end
-
-interface = Interface.new
-interface.new_game
