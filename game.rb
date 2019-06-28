@@ -15,17 +15,19 @@ class Game
     @dealer_score = 0
   end
 
+  # change deck
+
   def winner
     if @player_score <= GameRules::BLACK_JACK && (@player_score > @dealer_score || @dealer_score > GameRules::BLACK_JACK)
-      puts 'Победил игрок!'
+      puts GameRules::PLAYER_WINNER_MESSAGE
       @player_bank.amount += @game_bank
       @game_bank = 0
     elsif @dealer_score <= GameRules::BLACK_JACK && (@player_score < @dealer_score || @player_score > GameRules::BLACK_JACK)
-      puts 'Победил диллер!'
+      puts GameRules::DEALER_WINNER_MESSAGE
       @dealer_bank.amount += @game_bank
       @game_bank = 0
     else
-      puts 'Победила дружба!'
+      puts GameRules::DRAW_MESSAGE
       @player_bank.amount += (@game_bank / 2)
       @dealer_bank.amount += (@game_bank / 2)
       @game_bank = 0
@@ -46,16 +48,16 @@ class Game
       deck << @new_deck.deck.delete(@new_deck.deck.sample)
       score_counter
     else
-      raise 'У вас уже 3 карты.'
+      raise GameRules::MAX_CARD_WARNING
     end
   end
 
   def dealer_turn
     if @dealer_score >= 17 || @dealer_deck.count >= GameRules::MAX_CARDS
-      puts 'Диллер пропускает ход'
+      puts GameRules::DEALER_PASS
     else
       hand_card(@dealer_deck)
-      puts 'Диллер взял карту'
+      puts GameRules::DEALER_HIT
     end
   end
 

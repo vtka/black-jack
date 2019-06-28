@@ -11,7 +11,6 @@ class Card
   end
 
   def to_s
-    # "#{rank[0]}#{suit}"
   "   ┌───────┐
    │#{rank[0]}      │
    │       │
