@@ -3,7 +3,7 @@ class Card
   attr_accessor :rank, :suit
 
   SUITS = ['♤', '♡', '♢', '♧']
-  RANK = %w(2 3 4 5 6 7 8 9 10 Jack Queen King Ace)
+  RANK = %w(2 3 4 5 6 7 8 9 X J Q K A) # X - потому что 10-ка портит весь графон
 
   def initialize(rank, suit)
     @rank = rank
@@ -13,11 +13,11 @@ class Card
   def to_s(hidden: false)
     unless hidden
   "   ┌───────┐
-   │#{rank[0]}      │
+   │#{rank}      │
    │       │
    │   #{suit}   │
    │       │
-   │      #{rank[0]}│
+   │      #{rank}│
    └───────┘"
      else
   '   ┌───────┐

@@ -11,7 +11,7 @@ class GameRules
     '7': 7,
     '8': 8,
     '9': 9,
-    '10': 10,
+    'X': 10,
     'Jack': 10,
     'Queen': 10,
     'King': 10,
@@ -38,7 +38,3 @@ class GameRules
 
   DRAW_MESSAGE = 'Победила дружба!'
 end
-
-# game = GameRules.new
-
-# game.test

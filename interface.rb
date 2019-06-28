@@ -34,7 +34,8 @@ class Interface
 
   def first_round
     @game.shuffle_deck
-    @game.initial_hand(@game.player_deck, @game.dealer_deck)
+    @game.initial_hand(@game.player_deck)
+    @game.initial_hand(@game.dealer_deck)
     show_assets(false)
   end
 

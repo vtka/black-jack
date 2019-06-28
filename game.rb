@@ -59,12 +59,9 @@ class Game
     end
   end
 
-  def initial_hand(player, dealer) # try add yield to reduce lines
+  def initial_hand(user)
     2.times do
-      hand_card(player)
-    end
-    2.times do
-      hand_card(dealer)
+      hand_card(user)
     end
   end
 
@@ -75,20 +72,18 @@ class Game
 
   def score_for(deck)
     scorecard = 0
+    has_ace = false
     GameRules::SCORE_BOARD.each do |rank, score|
-      deck.sort_by { |elem| Card::RANK.index elem }
       deck.each do |card|
-        if card.rank == rank.to_s
-          if scorecard >= GameRules::ACE_SCORE_DECISION_BREAKPOINT
-            GameRules::SCORE_BOARD[:Ace] = 1
-            scorecard += score
-          else
-            scorecard += score
-          end
-        end
+        scorecard += score if card.rank == rank.to_s
+        has_ace = true if card.rank == 'A'
       end
     end
-    scorecard
+    if scorecard > GameRules::BLACK_JACK && has_ace
+      scorecard -= GameRules::ACE_SCORE_DECISION_BREAKPOINT
+    else
+      scorecard
+    end
   end
 
   def bet
