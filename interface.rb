@@ -12,6 +12,7 @@ require_relative './hand'
 
 class Interface
   def initialize
+    puts GameRules::WELCOME_MESSAGE
     @game = Game.new # create Model
     start_game # start new game on initializing
   end
@@ -26,49 +27,21 @@ class Interface
       puts 'Новая игра!'
       @game.game_bank.make_bets(@game.player.bank, @game.dealer.bank, @game.game_bank)
       puts "Общая ставка: #{@game.game_bank}"
-      first_round
-      second_round
-      third_round
+      @game.first_round
+      show_assets(false)
+      puts '(1) Пропустить ход (2) Взять карту (3) Открыть карты'
+      @game.second_round
+      show_assets(false)
+      puts 'Диллер открывает карты....'
+      sleep(2.0)
+      show_assets(true)
+      puts 'Идет подсчет очков....'
+      sleep(2.0)
+      @game.winner
+      sleep(2.0)
+      @game.new_round
       break if @game.player.bank.amount_zero? || @game.dealer.bank.amount_zero?
     end
-  end
-
-  def first_round
-    # @game.shuffle_deck
-    @game.hand.initial_hand(@game.hand.player_deck)
-    @game.hand.initial_hand(@game.hand.dealer_deck)
-    show_assets(false)
-  end
-
-  def second_round
-    puts '(1) Пропустить ход (2) Взять карту (3) Открыть карты'
-    choice = gets.to_i
-    pass if choice == 1 || choice == 3
-    hit(@game.hand.player_deck) if choice == 2
-    @game.dealer_turn
-    show_assets(false)
-  end
-
-  def third_round
-    puts 'Диллер открывает карты....'
-    sleep(2.0)
-    show_assets(true)
-    puts 'Идет подсчет очков....'
-    sleep(2.0)
-    @game.winner
-    sleep(2.0)
-    @game.new_round
-  end
-
-  def pass
-    @game.dealer_turn
-  end
-
-  def hit(deck)
-    @game.hand.hand_card(deck)
-  end
-
-  def print
   end
 
   def show_assets(last_round)

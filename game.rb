@@ -1,11 +1,12 @@
 # Game
 class Game
-  attr_accessor :game_bank
+  attr_accessor :game_bank, :new_deck
   attr_reader :player, :dealer, :hand
 
   def initialize
     @player = Player.new(intro)
     @dealer = Dealer.new
+    @new_deck = Deck.new
     @game_bank = GameBank.new
     @hand = Hand.new
   end
@@ -24,30 +25,43 @@ class Game
   end
 
   def intro
-    puts 'Добро пожаловать. Укажите ваше имя:'
     gets.chomp.to_s
   end
 
-  def dealer_turn
-    if @hand.dealer_score >= GameRules::DEALER_DECISION_BREAKPOINT || @hand.dealer_deck.count >= GameRules::MAX_CARDS
-      puts GameRules::DEALER_PASS
-    else
-      @hand.hand_card(@hand.dealer_deck)
-      puts GameRules::DEALER_HIT
-    end
+  def first_round
+    @hand.initial_hand(@hand.player_deck, @new_deck)
+    @hand.initial_hand(@hand.dealer_deck, @new_deck)
   end
 
-  # def bet
-  #   @player.bank.withdraw(GameRules::BET)
-  #   @dealer.bank.withdraw(GameRules::BET)
-  #   @game_bank.debit(GameRules::BET * 2)
-  # end
+  def second_round
+    choice = gets.to_i
+    pass if choice == 1 || choice == 3
+    hit(@hand.player_deck, @new_deck) if choice == 2
+    dealer_turn
+  end
 
   def new_round
     @hand.player_deck.clear
     @hand.player_score = 0
     @hand.dealer_deck.clear
     @hand.dealer_score = 0
-    @hand.new_deck = Deck.new
+    @new_deck = Deck.new
+  end
+
+  def hit(deck, game_deck)
+    @hand.hand_card(deck, @new_deck)
+  end
+
+  def pass
+    dealer_turn
+  end
+
+  def dealer_turn
+    if @hand.dealer_score >= GameRules::DEALER_DECISION_BREAKPOINT || @hand.dealer_deck.count >= GameRules::MAX_CARDS
+      puts GameRules::DEALER_PASS
+    else
+      @hand.hand_card(@hand.dealer_deck, @new_deck)
+      puts GameRules::DEALER_HIT
+    end
   end
 end

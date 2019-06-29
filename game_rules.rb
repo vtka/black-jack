@@ -38,5 +38,7 @@ class GameRules
 
   DRAW_MESSAGE = 'Победила дружба!'
 
+  WELCOME_MESSAGE = 'Добро пожаловать. Укажите ваше имя:'
+
   NOT_ENOUGH_MONEY = 'Недостаточно средств!'
 end
