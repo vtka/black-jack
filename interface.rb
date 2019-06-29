@@ -48,16 +48,16 @@ class Interface
     system('clear')
     puts "#{@game.player.name}:"
     puts @game.player.bank
-    InlinePrinter.new.print(@game.hand.player_deck)
-    puts "Ваши очки: #{@game.hand.player_score}"
+    InlinePrinter.new.print(@game.player.deck)
+    puts "Ваши очки: #{@game.player.score}"
     puts '--------------------'
     puts @game.dealer.bank
     puts 'Диллер:'
     if last_round == true
-      InlinePrinter.new.print(@game.hand.dealer_deck)
-      puts puts "Очки диллера: #{@game.hand.dealer_score}"
+      InlinePrinter.new.print(@game.dealer.deck)
+      puts puts "Очки диллера: #{@game.dealer.score}"
     else
-      InlinePrinter.new.print_masked(@game.hand.dealer_deck)
+      InlinePrinter.new.print_masked(@game.dealer.deck)
     end
   end
 end

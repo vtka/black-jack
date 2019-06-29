@@ -1,23 +1,23 @@
 # User deck and score control
 class Hand
-  attr_accessor :player_score, :dealer_score, :player_deck, :dealer_deck
+  attr_accessor :user_score, :user_deck
 
   def initialize
-    @player_deck = []
-    @dealer_deck = []
-    @player_score = 0
-    @dealer_score = 0
+    @user_deck = []
+    # @dealer_deck = []
+    @user_score = 0
+    # @dealer_score = 0
   end
 
-  def initial_hand(user, game_deck)
+  def initial_hand(game_deck)
     2.times do
-      hand_card(user, game_deck)
+      hand_card(game_deck)
     end
   end
 
-  def hand_card(user_deck, game_deck)
-    if user_deck.count < GameRules::MAX_CARDS
-      user_deck << game_deck.deck.delete(game_deck.deck.sample)
+  def hand_card(game_deck)
+    if @user_deck.count < GameRules::MAX_CARDS
+      @user_deck << game_deck.deck.delete(game_deck.deck.sample)
       score_counter
     else
       raise GameRules::MAX_CARD_WARNING
@@ -41,7 +41,6 @@ class Hand
   end
 
   def score_counter
-    @player_score = score_for(@player_deck)
-    @dealer_score = score_for(@dealer_deck)
+    @user_score = score_for(@user_deck)
   end
 end

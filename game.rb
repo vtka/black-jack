@@ -8,14 +8,13 @@ class Game
     @dealer = Dealer.new
     @new_deck = Deck.new
     @game_bank = GameBank.new
-    @hand = Hand.new
   end
 
   def winner
-    if @hand.player_score <= GameRules::BLACK_JACK && (@hand.player_score > @hand.dealer_score || @hand.dealer_score > GameRules::BLACK_JACK)
+    if @player.score <= GameRules::BLACK_JACK && (@player.score > @dealer.score || @dealer.score > GameRules::BLACK_JACK)
       puts GameRules::PLAYER_WINNER_MESSAGE
       @game_bank.reward_winner(@player, @game_bank.amount, @game_bank)
-    elsif @hand.dealer_score <= GameRules::BLACK_JACK && (@hand.player_score < @hand.dealer_score || @hand.player_score > GameRules::BLACK_JACK)
+    elsif @dealer.score <= GameRules::BLACK_JACK && (@player.score < @dealer.score || @player.score > GameRules::BLACK_JACK)
       puts GameRules::DEALER_WINNER_MESSAGE
       @game_bank.reward_winner(@dealer, @game_bank.amount, @game_bank)
     else
@@ -29,27 +28,27 @@ class Game
   end
 
   def first_round
-    @hand.initial_hand(@hand.player_deck, @new_deck)
-    @hand.initial_hand(@hand.dealer_deck, @new_deck)
+    @player.take_starter_cards(@new_deck)
+    @dealer.take_starter_cards(@new_deck)
   end
 
   def second_round
     choice = gets.to_i
     pass if choice == 1 || choice == 3
-    hit(@hand.player_deck, @new_deck) if choice == 2
-    dealer_turn
+    hit(@new_deck) if choice == 2
+    dealer_turn # user deck everywhere
   end
 
   def new_round
-    @hand.player_deck.clear
-    @hand.player_score = 0
-    @hand.dealer_deck.clear
-    @hand.dealer_score = 0
+    @player.deck.clear
+    @player.clear_score
+    @dealer.deck.clear
+    @dealer.clear_score
     @new_deck = Deck.new
   end
 
-  def hit(deck, game_deck)
-    @hand.hand_card(deck, @new_deck)
+  def hit(game_deck)
+    @player.take_card(game_deck)
   end
 
   def pass
@@ -57,10 +56,10 @@ class Game
   end
 
   def dealer_turn
-    if @hand.dealer_score >= GameRules::DEALER_DECISION_BREAKPOINT || @hand.dealer_deck.count >= GameRules::MAX_CARDS
+    if @dealer.score >= GameRules::DEALER_DECISION_BREAKPOINT || @dealer.deck.count >= GameRules::MAX_CARDS
       puts GameRules::DEALER_PASS
     else
-      @hand.hand_card(@hand.dealer_deck, @new_deck)
+      @dealer.take_card(@new_deck)
       puts GameRules::DEALER_HIT
     end
   end
