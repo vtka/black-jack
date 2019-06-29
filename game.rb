@@ -1,30 +1,25 @@
 # Game
 class Game
-  attr_reader :dealer_bank, :player_bank, :game_bank, :player, :dealer, :hand
+  attr_accessor :game_bank
+  attr_reader :player, :dealer, :hand
 
   def initialize
     @player = Player.new(intro)
     @dealer = Dealer.new
-    @player_bank = Bank.new(100)
-    @dealer_bank = Bank.new(100)
-    @game_bank = Bank.new
+    @game_bank = GameBank.new
     @hand = Hand.new
   end
 
   def winner
     if @hand.player_score <= GameRules::BLACK_JACK && (@hand.player_score > @hand.dealer_score || @hand.dealer_score > GameRules::BLACK_JACK)
       puts GameRules::PLAYER_WINNER_MESSAGE
-      @player_bank.debit(@game_bank.amount)
-      @game_bank.withdraw(@game_bank.amount)
+      @game_bank.reward_winner(@player, @game_bank.amount, @game_bank)
     elsif @hand.dealer_score <= GameRules::BLACK_JACK && (@hand.player_score < @hand.dealer_score || @hand.player_score > GameRules::BLACK_JACK)
       puts GameRules::DEALER_WINNER_MESSAGE
-      @dealer_bank.debit(@game_bank.amount)
-      @game_bank.withdraw(@game_bank.amount)
+      @game_bank.reward_winner(@dealer, @game_bank.amount, @game_bank)
     else
       puts GameRules::DRAW_MESSAGE
-      @player_bank.debit(@game_bank.amount / 2)
-      @dealer_bank.debit(@game_bank.amount / 2)
-      @game_bank.withdraw(@game_bank.amount)
+      @game_bank.refund(@player.bank, @dealer.bank, @game_bank)
     end
   end
 
@@ -42,11 +37,11 @@ class Game
     end
   end
 
-  def bet
-    @player_bank.withdraw(GameRules::BET)
-    @dealer_bank.withdraw(GameRules::BET)
-    @game_bank.debit(GameRules::BET * 2)
-  end
+  # def bet
+  #   @player.bank.withdraw(GameRules::BET)
+  #   @dealer.bank.withdraw(GameRules::BET)
+  #   @game_bank.debit(GameRules::BET * 2)
+  # end
 
   def new_round
     @hand.player_deck.clear

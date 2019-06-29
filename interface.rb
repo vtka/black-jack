@@ -2,6 +2,7 @@ require_relative './user'
 require_relative './player'
 require_relative './dealer'
 require_relative './bank'
+require_relative './game_bank'
 require_relative './card'
 require_relative './deck'
 require_relative './game'
@@ -23,13 +24,12 @@ class Interface
     loop do
       system('clear')
       puts 'Новая игра!'
-      @game.bet
+      @game.game_bank.make_bets(@game.player.bank, @game.dealer.bank, @game.game_bank)
       puts "Общая ставка: #{@game.game_bank}"
       first_round
       second_round
       third_round
-      break if @game.player_bank.amount_zero? || @game.dealer_bank.amount_zero?
-
+      break if @game.player.bank.amount_zero? || @game.dealer.bank.amount_zero?
     end
   end
 
@@ -74,11 +74,11 @@ class Interface
   def show_assets(last_round)
     system('clear')
     puts "#{@game.player.name}:"
-    puts @game.player_bank
+    puts @game.player.bank
     InlinePrinter.new.print(@game.hand.player_deck)
     puts "Ваши очки: #{@game.hand.player_score}"
     puts '--------------------'
-    puts @game.dealer_bank
+    puts @game.dealer.bank
     puts 'Диллер:'
     if last_round == true
       InlinePrinter.new.print(@game.hand.dealer_deck)
