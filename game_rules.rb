@@ -24,9 +24,9 @@ class GameRules
 
   MAX_CARDS = 3
 
-  MAX_CARD_WARNING = 'У вас уже 3 карты.'
-
   BET = 10
+
+  MAX_CARD_WARNING = 'У вас уже 3 карты.'
 
   DEALER_PASS = 'Диллер пропускает ход'
 
@@ -37,4 +37,6 @@ class GameRules
   DEALER_WINNER_MESSAGE = 'Победил диллер!'
 
   DRAW_MESSAGE = 'Победила дружба!'
+
+  NOT_ENOUGH_MONEY = 'Недостаточно средств!'
 end

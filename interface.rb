@@ -7,6 +7,7 @@ require_relative './deck'
 require_relative './game'
 require_relative './game_rules'
 require_relative './inline_printer'
+require_relative './hand'
 
 class Interface
   def initialize
@@ -33,9 +34,9 @@ class Interface
   end
 
   def first_round
-    @game.shuffle_deck
-    @game.initial_hand(@game.player_deck)
-    @game.initial_hand(@game.dealer_deck)
+    # @game.shuffle_deck
+    @game.hand.initial_hand(@game.hand.player_deck)
+    @game.hand.initial_hand(@game.hand.dealer_deck)
     show_assets(false)
   end
 
@@ -43,7 +44,7 @@ class Interface
     puts '(1) Пропустить ход (2) Взять карту (3) Открыть карты'
     choice = gets.to_i
     pass if choice == 1 || choice == 3
-    hit(@game.player_deck) if choice == 2
+    hit(@game.hand.player_deck) if choice == 2
     @game.dealer_turn
     show_assets(false)
   end
@@ -64,7 +65,7 @@ class Interface
   end
 
   def hit(deck)
-    @game.hand_card(deck)
+    @game.hand.hand_card(deck)
   end
 
   def print
@@ -74,16 +75,16 @@ class Interface
     system('clear')
     puts "#{@game.player.name}:"
     puts @game.player_bank
-    InlinePrinter.new.print(@game.player_deck)
-    puts "Ваши очки: #{@game.player_score}"
+    InlinePrinter.new.print(@game.hand.player_deck)
+    puts "Ваши очки: #{@game.hand.player_score}"
     puts '--------------------'
     puts @game.dealer_bank
     puts 'Диллер:'
     if last_round == true
-      InlinePrinter.new.print(@game.dealer_deck)
-      puts puts "Очки диллера: #{@game.dealer_score}"
+      InlinePrinter.new.print(@game.hand.dealer_deck)
+      puts puts "Очки диллера: #{@game.hand.dealer_score}"
     else
-      InlinePrinter.new.print_masked(@game.dealer_deck)
+      InlinePrinter.new.print_masked(@game.hand.dealer_deck)
     end
   end
 end

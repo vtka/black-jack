@@ -1,8 +1,8 @@
 class Bank
-  attr_accessor :amount
+  attr_reader :amount
   
-  def initialize
-    @amount = 100
+  def initialize(amount=0)
+    @amount = amount
   end
 
   def to_s
@@ -11,5 +11,14 @@ class Bank
 
   def amount_zero?
     @amount == 0
+  end
+
+  def debit(amount)
+    @amount += amount
+  end
+
+  def withdraw(amount)
+    raise NOT_ENOUGH_MONEY if amount > @amount
+    @amount -= amount
   end
 end
