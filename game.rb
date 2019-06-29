@@ -8,7 +8,7 @@ class Game
     @player_bank = Bank.new(100)
     @dealer_bank = Bank.new(100)
     @game_bank = Bank.new
-    # @hand = Hand.new
+    @hand = Hand.new
   end
 
   def winner
