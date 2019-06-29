@@ -13,8 +13,8 @@ require_relative './hand'
 class Interface
   def initialize
     puts GameRules::WELCOME_MESSAGE
-    @game = Game.new # create Model
-    start_game # start new game on initializing
+    @game = Game.new
+    start_game
   end
 
   def start_game
