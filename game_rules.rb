@@ -26,8 +26,6 @@ class GameRules
 
   BET = 10
 
-  MAX_CARD_WARNING = 'У вас уже 3 карты.'
-
   DEALER_PASS = 'Диллер пропускает ход'
 
   DEALER_HIT = 'Диллер взял карту'

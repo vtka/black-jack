@@ -17,7 +17,7 @@ class User
   end
 
   def deck
-    @hand.user_deck
+    @hand.cards
   end
 
   def take_starter_cards(game_deck)

@@ -1,12 +1,12 @@
 # User deck and score control
 class Hand
-  attr_accessor :user_score, :user_deck
+  attr_accessor :user_score, :cards
+
+  MAX_CARD_WARNING = 'У вас уже 3 карты.'
 
   def initialize
-    @user_deck = []
-    # @dealer_deck = []
+    @cards = []
     @user_score = 0
-    # @dealer_score = 0
   end
 
   def initial_hand(game_deck)
@@ -16,11 +16,11 @@ class Hand
   end
 
   def hand_card(game_deck)
-    if @user_deck.count < GameRules::MAX_CARDS
-      @user_deck << game_deck.deck.delete(game_deck.deck.sample)
+    if @cards.count < GameRules::MAX_CARDS
+      @cards << game_deck.deck.delete(game_deck.deck.sample)
       score_counter
     else
-      raise GameRules::MAX_CARD_WARNING
+      raise MAX_CARD_WARNING
     end
   end
 
@@ -41,6 +41,6 @@ class Hand
   end
 
   def score_counter
-    @user_score = score_for(@user_deck)
+    @user_score = score_for(@cards)
   end
 end

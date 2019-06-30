@@ -9,8 +9,9 @@ class Deck
   def fill_deck
     Card::SUITS.each do |suit|
       Card::RANK.each do |rank|
-        @deck.shuffle! << Card.new(rank, suit)
+        @deck << Card.new(rank, suit)
       end
     end
+    @deck.shuffle!
   end
 end
