@@ -21,4 +21,8 @@ class Bank
     raise NOT_ENOUGH_MONEY if amount > @amount
     @amount -= amount
   end
+
+  def reset_bank
+    @amount = 0
+  end
 end

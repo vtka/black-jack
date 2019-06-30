@@ -1,19 +1,22 @@
 # Game funds operator
 class GameBank < Bank
-  def make_bets(player, dealer, game_bank)
-    player.withdraw(GameRules::BET)
-    dealer.withdraw(GameRules::BET)
-    game_bank.debit(GameRules::BET * 2)
+  def make_bets(*players)
+    players.each do |player|
+      player.withdraw(GameRules::BET)
+      debit(GameRules::BET)
+    end
   end
 
-  def reward_winner(reciever, amount, payer)
-    reciever.bank.debit(amount)
-    payer.withdraw(amount)
+  def reward_winner(winner)
+    winner.debit(amount)
+    reset_bank
   end
 
-  def refund(player, dealer, game_bank)
-    player.debit(game_bank.amount / 2)
-    dealer.debit(game_bank.amount / 2)
-    game_bank.withdraw(game_bank.amount)
+  def refund(*players)
+    refund_amount = amount / players.size.to_f
+    players.each do |player|
+      player.debit(refund_amount)
+      withdraw(refund_amount)
+    end
   end
 end

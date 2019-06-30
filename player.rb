@@ -15,4 +15,12 @@ class Player
   def deck
     @hand.cards
   end
+
+  def debit(amount)
+    @bank.debit(amount)
+  end
+
+  def withdraw(amount)
+    @bank.withdraw(amount)
+  end
 end

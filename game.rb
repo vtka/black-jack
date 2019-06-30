@@ -32,7 +32,7 @@ class Game
     loop do
       system('clear')
       @interface.new_game_message
-      @game_bank.make_bets(@player.bank, @dealer.bank, @game_bank)
+      @game_bank.make_bets(@player, @dealer)
       @interface.show_total_bank(@game_bank)
       first_round
       @interface.show_assets(false, @player, @dealer)
@@ -53,17 +53,17 @@ class Game
 
   def winner
     if @player.score <= GameRules::BLACK_JACK && (@player.score > @dealer.score || @dealer.score > GameRules::BLACK_JACK)
-      winner = @player
+      @winner = @player
       @interface.show_winner(GameRules::PLAYER_WINNER_MESSAGE)
-      @game_bank.reward_winner(@player, @game_bank.amount, @game_bank)
+      @game_bank.reward_winner(@winner)
     elsif @dealer.score <= GameRules::BLACK_JACK && (@player.score < @dealer.score || @player.score > GameRules::BLACK_JACK)
-      winner = @dealer
+      @winner = @dealer
       @interface.show_winner(GameRules::DEALER_WINNER_MESSAGE)
-      @game_bank.reward_winner(@dealer, @game_bank.amount, @game_bank)
+      @game_bank.reward_winner(@winner)
     else
       @winner = nil
       @interface.show_winner(GameRules::DRAW_MESSAGE)
-      @game_bank.refund(@player.bank, @dealer.bank, @game_bank)
+      @game_bank.refund(@player, @dealer)
     end
   end
 
