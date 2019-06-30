@@ -1,9 +1,9 @@
 # Run the program
-require_relative './interface'
+require_relative './game'
 class Run
   def initialize
-    @interface = Interface.new
-    @interface.new_game
+    @game = Game.new
+    @game.new_game
   end
 end
 
