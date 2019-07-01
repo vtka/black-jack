@@ -40,6 +40,14 @@ class Interface
     puts GameRules::DRAW_MESSAGE
   end
 
+  def dealer_pass_message
+    puts GameRules::DEALER_PASS
+  end
+
+  def dealer_hit_message
+    puts GameRules::DEALER_HIT
+  end
+
   def show_assets(last_round, player, dealer)
     system('clear')
     puts "#{player.name}:"

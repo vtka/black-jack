@@ -30,20 +30,15 @@ class Game
   def new_game
     start_game
     loop do
-      @interface.new_game_message
-      @game_bank.make_bets(@player, @dealer)
-      @interface.show_total_bank(@game_bank)
+      starter_announcer
       first_round
-      @interface.show_assets(false, @player, @dealer)
+      round_announcer
       @interface.show_player_options
       play_round
-      @interface.card_reveal_message
-      sleep(2.0)
-      @interface.show_assets(true, @player, @dealer)
-      @interface.scoring_message
-      sleep(2.0)
+      result_announcer
+      # sleep(2.0)
       end_round
-      sleep(2.0)
+      # sleep(2.0)
       new_round
       break if @player.bank.amount_zero? || @dealer.bank.amount_zero?
     end
@@ -82,7 +77,7 @@ class Game
       player_turn(choice)
       round_announcer
       @interface.show_last_options
-      break if choice == 3 || @player.cards.count >= GameRules::MAX_CARDS || @dealer.cards.count >= GameRules::MAX_CARDS
+      break if choice == 3 || @player.cards.count >= GameRules::MAX_CARDS || (@dealer.cards.count >= GameRules::MAX_CARDS && @player.cards.count >= GameRules::MAX_CARDS)
     end
   end
 
@@ -96,9 +91,21 @@ class Game
     hit(@player) if choice == 2
   end
 
+  def starter_announcer
+    @interface.new_game_message
+    @game_bank.make_bets(@player, @dealer)
+    @interface.show_total_bank(@game_bank)
+  end
+
   def round_announcer
-    @interface.show_player_options
     @interface.show_assets(false, @player, @dealer)
+  end
+
+  def result_announcer
+    # sleep(2.0)
+    @interface.card_reveal_message
+    @interface.show_assets(true, @player, @dealer)
+    @interface.scoring_message
   end
 
   def new_round
@@ -135,10 +142,10 @@ class Game
 
   def dealer_turn
     if @dealer.score >= GameRules::DEALER_DECISION_BREAKPOINT || @dealer.cards.count >= GameRules::MAX_CARDS
-      puts GameRules::DEALER_PASS
+      @interface.dealer_pass_message
     else
       hit(@dealer)
-      puts GameRules::DEALER_HIT
+      @interface.dealer_hit_message
     end
   end
 end
