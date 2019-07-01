@@ -136,10 +136,6 @@ class Game
     dealer_turn
   end
 
-  def reveal
-    end_game
-  end
-
   def dealer_turn
     if @dealer.score >= GameRules::DEALER_DECISION_BREAKPOINT || @dealer.cards.count >= GameRules::MAX_CARDS
       @interface.dealer_pass_message
