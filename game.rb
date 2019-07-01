@@ -51,13 +51,21 @@ class Game
   private
 
   def define_winner
-    if @player.score <= GameRules::BLACK_JACK && (@player.score > @dealer.score || @dealer.score > GameRules::BLACK_JACK)
+    if player_won?
       @winner = @player
-    elsif @dealer.score <= GameRules::BLACK_JACK && (@player.score < @dealer.score || @player.score > GameRules::BLACK_JACK)
+    elsif dealer_won?
       @winner = @dealer
     else
       @winner = nil
     end
+  end
+
+  def player_won?
+    @player.score <= GameRules::BLACK_JACK && (@player.score > @dealer.score || @dealer.score > GameRules::BLACK_JACK)
+  end
+
+  def dealer_won?
+    @dealer.score <= GameRules::BLACK_JACK && (@player.score < @dealer.score || @player.score > GameRules::BLACK_JACK)
   end
 
   def end_round
