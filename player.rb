@@ -8,6 +8,7 @@ class Player
 
   def_delegators :@hand, :score, :cards
   def_delegators :@bank, :debit, :withdraw
+  def_delegator :@hand, :max_cards?
 
   def initialize(name)
     @name = name

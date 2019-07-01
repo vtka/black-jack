@@ -77,7 +77,7 @@ class Game
       player_turn(choice)
       round_announcer
       @interface.show_last_options
-      break if choice == 3 || @player.cards.count >= GameRules::MAX_CARDS || (@dealer.cards.count >= GameRules::MAX_CARDS && @player.cards.count >= GameRules::MAX_CARDS)
+      break if choice == 3 || @player.max_cards? || (@dealer.max_cards? && @player.max_cards?)
     end
   end
 

@@ -13,6 +13,10 @@ class Hand
     ace_correction(sum)
   end
 
+  def max_cards?
+    cards.count >= GameRules::MAX_CARDS
+  end
+
   private
 
   def ace_correction(sum)
