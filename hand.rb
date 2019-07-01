@@ -8,23 +8,19 @@ class Hand
     @cards = []
   end
 
-  def score_for(cards)
-    scorecard = 0
-    has_ace = false
-    GameRules::SCORE_BOARD.each do |rank, score|
-      cards.each do |card|
-        scorecard += score if card.rank == rank.to_s
-        has_ace = true if card.rank == 'A'
-      end
-    end
-    if scorecard > GameRules::BLACK_JACK && has_ace
-      scorecard -= GameRules::ACE_SCORE_DECISION_BREAKPOINT
-    else
-      scorecard
-    end
+  def score
+    sum = cards.map(&:value).sum
+    ace_correction(sum)
   end
 
-  def score_counter
-    score_for(@cards)
+  private
+
+  def ace_correction(sum)
+    cards.each do |card|
+      if (sum > GameRules::BLACK_JACK) && card.ace?
+        sum -= GameRules::ACE_SCORE_DECISION_BREAKPOINT
+      end
+    end
+    sum
   end
 end

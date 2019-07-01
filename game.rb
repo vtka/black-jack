@@ -30,40 +30,22 @@ class Game
   def new_game
     start_game
     loop do
-      system('clear')
       @interface.new_game_message
       @game_bank.make_bets(@player, @dealer)
       @interface.show_total_bank(@game_bank)
       first_round
       @interface.show_assets(false, @player, @dealer)
       @interface.show_player_options
-      second_round
-      @interface.show_assets(false, @player, @dealer)
+      play_round
       @interface.card_reveal_message
       sleep(2.0)
       @interface.show_assets(true, @player, @dealer)
       @interface.scoring_message
       sleep(2.0)
-      winner
+      end_round
       sleep(2.0)
       new_round
       break if @player.bank.amount_zero? || @dealer.bank.amount_zero?
-    end
-  end
-
-  def winner
-    if @player.score <= GameRules::BLACK_JACK && (@player.score > @dealer.score || @dealer.score > GameRules::BLACK_JACK)
-      @winner = @player
-      @interface.show_winner(GameRules::PLAYER_WINNER_MESSAGE)
-      @game_bank.reward_winner(@winner)
-    elsif @dealer.score <= GameRules::BLACK_JACK && (@player.score < @dealer.score || @player.score > GameRules::BLACK_JACK)
-      @winner = @dealer
-      @interface.show_winner(GameRules::DEALER_WINNER_MESSAGE)
-      @game_bank.reward_winner(@winner)
-    else
-      @winner = nil
-      @interface.show_winner(GameRules::DRAW_MESSAGE)
-      @game_bank.refund(@player, @dealer)
     end
   end
 
@@ -71,21 +53,57 @@ class Game
     gets.chomp.to_s
   end
 
+  private
+
+  def define_winner
+    if @player.score <= GameRules::BLACK_JACK && (@player.score > @dealer.score || @dealer.score > GameRules::BLACK_JACK)
+      @winner = @player
+    elsif @dealer.score <= GameRules::BLACK_JACK && (@player.score < @dealer.score || @player.score > GameRules::BLACK_JACK)
+      @winner = @dealer
+    else
+      @winner = nil
+    end
+  end
+
+  def end_round
+    winner = define_winner
+    if winner
+      @interface.show_winner(winner)
+      @game_bank.reward_winner(winner)
+    else
+      @interface.show_draw
+      @game_bank.refund(@player, @dealer)
+    end
+  end
+
+  def play_round
+    loop do
+      choice = gets.to_i
+      player_turn(choice)
+      round_announcer
+      @interface.show_last_options
+      break if choice == 3 || @player.cards.count >= GameRules::MAX_CARDS || @dealer.cards.count >= GameRules::MAX_CARDS
+    end
+  end
+
   def first_round
     initial_hand(@player)
     initial_hand(@dealer)
   end
 
-  def second_round
-    choice = gets.to_i
+  def player_turn(choice)
     pass if choice == 1 || choice == 3
     hit(@player) if choice == 2
-    dealer_turn
+  end
+
+  def round_announcer
+    @interface.show_player_options
+    @interface.show_assets(false, @player, @dealer)
   end
 
   def new_round
-    @player.deck.clear
-    @dealer.deck.clear
+    @player.cards.clear
+    @dealer.cards.clear
     @new_deck = Deck.new
   end
 
@@ -104,15 +122,19 @@ class Game
   end
 
   def hit(player)
-    add_card(player.deck)
+    add_card(player.cards)
   end
 
   def pass
     dealer_turn
   end
 
+  def reveal
+    end_game
+  end
+
   def dealer_turn
-    if @dealer.score >= GameRules::DEALER_DECISION_BREAKPOINT || @dealer.deck.count >= GameRules::MAX_CARDS
+    if @dealer.score >= GameRules::DEALER_DECISION_BREAKPOINT || @dealer.cards.count >= GameRules::MAX_CARDS
       puts GameRules::DEALER_PASS
     else
       hit(@dealer)

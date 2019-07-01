@@ -8,8 +8,8 @@ class Deck
 
   def fill_deck
     Card::SUITS.each do |suit|
-      Card::RANK.each do |rank|
-        @deck << Card.new(rank, suit)
+      Card::SCORE_BOARD.each do |rank, value|
+        @deck << Card.new(rank, suit, value)
       end
     end
     @deck.shuffle!
