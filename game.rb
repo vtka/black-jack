@@ -36,9 +36,9 @@ class Game
       @interface.show_player_options
       play_round
       result_announcer
-      # sleep(2.0)
+      sleep(2.0)
       end_round
-      # sleep(2.0)
+      sleep(2.0)
       new_round
       break if @player.bank.amount_zero? || @dealer.bank.amount_zero?
     end
@@ -61,11 +61,13 @@ class Game
   end
 
   def player_won?
-    @player.score <= GameRules::BLACK_JACK && (@player.score > @dealer.score || @dealer.score > GameRules::BLACK_JACK)
+    return false if @player.score > GameRules::BLACK_JACK
+    @player.score > @dealer.score || @dealer.score > GameRules::BLACK_JACK
   end
 
   def dealer_won?
-    @dealer.score <= GameRules::BLACK_JACK && (@player.score < @dealer.score || @player.score > GameRules::BLACK_JACK)
+    return false if @dealer.score > GameRules::BLACK_JACK
+    @dealer.score > @player.score || @player.score > GameRules::BLACK_JACK
   end
 
   def end_round
@@ -95,8 +97,12 @@ class Game
   end
 
   def player_turn(choice)
-    pass if choice == 1 || choice == 3
-    hit(@player) if choice == 2
+    if choice == 1 || choice == 3
+      pass
+    elsif choice == 2
+      hit(@player)
+      dealer_turn
+    end
   end
 
   def starter_announcer
@@ -110,7 +116,7 @@ class Game
   end
 
   def result_announcer
-    # sleep(2.0)
+    sleep(2.0)
     @interface.card_reveal_message
     @interface.show_assets(true, @player, @dealer)
     @interface.scoring_message
