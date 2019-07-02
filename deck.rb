@@ -6,6 +6,10 @@ class Deck
     fill_deck
   end
 
+  def deal_card
+    @deck.delete(@deck.sample)
+  end
+
   def fill_deck
     Card::SUITS.each do |suit|
       Card::SCORE_BOARD.each do |rank, value|

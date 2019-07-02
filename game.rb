@@ -14,6 +14,12 @@ class Game
   attr_accessor :game_bank, :new_deck
   attr_reader :player, :dealer, :hand
 
+  PLAYER_ACTIONS = {
+    pass: 1,
+    hit: 2,
+    reveal: 3
+  }
+
   def initialize
     @interface = Interface.new
     @player = Player.new(intro)
@@ -83,11 +89,16 @@ class Game
 
   def play_round
     loop do
-      choice = gets.to_i
-      player_turn(choice)
-      round_announcer
-      @interface.show_last_options
-      break if choice == 3 || @player.max_cards? || (@dealer.max_cards? && @player.max_cards?)
+      begin
+        choice = gets.to_i
+        player_turn(choice)
+        round_announcer
+        @interface.show_last_options
+        break if choice == PLAYER_ACTIONS[:reveal] || @player.max_cards? || (@dealer.max_cards? && @player.max_cards?)
+      rescue => e
+        puts e.message
+        retry
+      end
     end
   end
 
@@ -97,10 +108,10 @@ class Game
   end
 
   def player_turn(choice)
-    if choice == 1 || choice == 3
+    if choice == PLAYER_ACTIONS[:pass] || choice == PLAYER_ACTIONS[:reveal]
       pass
-    elsif choice == 2
-      hit(@player)
+    elsif choice == PLAYER_ACTIONS[:hit]
+      @player.add_card(@new_deck.deal_card)
       dealer_turn
     end
   end
@@ -128,22 +139,10 @@ class Game
     @new_deck = Deck.new
   end
 
-  def add_card(cards)
-    if cards.count < GameRules::MAX_CARDS
-      cards << @new_deck.deck.delete(@new_deck.deck.sample)
-    else
-      raise Hand::MAX_CARD_WARNING
-    end
-  end
-
   def initial_hand(player)
     2.times do
-      hit(player)
+      player.add_card(@new_deck.deal_card)
     end
-  end
-
-  def hit(player)
-    add_card(player.cards)
   end
 
   def pass
@@ -151,10 +150,10 @@ class Game
   end
 
   def dealer_turn
-    if @dealer.score >= GameRules::DEALER_DECISION_BREAKPOINT || @dealer.cards.count >= GameRules::MAX_CARDS
+    unless @dealer.can_take_card?
       @interface.dealer_pass_message
     else
-      hit(@dealer)
+      @dealer.add_card(@new_deck.deal_card)
       @interface.dealer_hit_message
     end
   end

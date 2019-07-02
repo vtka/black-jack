@@ -15,4 +15,13 @@ class Player
     @bank = Bank.new(100)
     @hand = Hand.new
   end
+
+  def add_card(deal_card)
+    @hand.add_card(deal_card)
+  end
+
+  def can_take_card?
+    return false if @hand.max_cards?
+    true
+  end
 end
