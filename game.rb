@@ -15,14 +15,14 @@ class Game
   attr_reader :player, :dealer, :hand
 
   PLAYER_ACTIONS = {
-    pass: 1,
+    dealer_turn: 1,
     hit: 2,
     reveal: 3
   }
 
   def initialize
     @interface = Interface.new
-    @player = Player.new(intro)
+    @player = Player.new(@interface.intro)
     @dealer = Dealer.new
     @new_deck = Deck.new
     @game_bank = GameBank.new
@@ -48,10 +48,6 @@ class Game
       new_round
       break if @player.bank.amount_zero? || @dealer.bank.amount_zero?
     end
-  end
-
-  def intro
-    gets.chomp.to_s
   end
 
   private
@@ -92,9 +88,11 @@ class Game
       begin
         choice = gets.to_i
         player_turn(choice)
+        dealer_turn
         round_announcer
+        break if choice == PLAYER_ACTIONS[:reveal]
+        break if !@player.can_take_card? && !@dealer.can_take_card?
         @interface.show_last_options
-        break if choice == PLAYER_ACTIONS[:reveal] || @player.max_cards? || (@dealer.max_cards? && @player.max_cards?)
       rescue => e
         puts e.message
         retry
@@ -108,11 +106,10 @@ class Game
   end
 
   def player_turn(choice)
-    if choice == PLAYER_ACTIONS[:pass] || choice == PLAYER_ACTIONS[:reveal]
-      pass
+    if choice == PLAYER_ACTIONS[:dealer_turn] || choice == PLAYER_ACTIONS[:reveal]
+      dealer_turn
     elsif choice == PLAYER_ACTIONS[:hit]
       @player.add_card(@new_deck.deal_card)
-      dealer_turn
     end
   end
 
@@ -143,10 +140,6 @@ class Game
     2.times do
       player.add_card(@new_deck.deal_card)
     end
-  end
-
-  def pass
-    dealer_turn
   end
 
   def dealer_turn

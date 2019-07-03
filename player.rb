@@ -21,7 +21,6 @@ class Player
   end
 
   def can_take_card?
-    return false if @hand.max_cards?
-    true
+    !@hand.max_cards?
   end
 end

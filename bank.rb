@@ -1,6 +1,8 @@
 class Bank
   attr_reader :amount
 
+  NOT_ENOUGH_MONEY = 'Недостаточно средств!'
+
   def initialize(amount=0)
     @amount = amount
   end

@@ -1,7 +1,19 @@
 #Interface class
 class Interface
+  DEALER_PASS = 'Диллер пропускает ход'
+
+  DEALER_HIT = 'Диллер взял карту'
+
+  DRAW_MESSAGE = 'Ничья!'
+
+  WELCOME_MESSAGE = 'Добро пожаловать. Укажите ваше имя:'
+
   def initialize
-    puts GameRules::WELCOME_MESSAGE
+    puts WELCOME_MESSAGE
+  end
+
+  def intro
+    gets.chomp.to_s
   end
 
   def welcome_message(to_whom)
@@ -37,15 +49,15 @@ class Interface
   end
 
   def show_draw
-    puts GameRules::DRAW_MESSAGE
+    puts DRAW_MESSAGE
   end
 
   def dealer_pass_message
-    puts GameRules::DEALER_PASS
+    puts DEALER_PASS
   end
 
   def dealer_hit_message
-    puts GameRules::DEALER_HIT
+    puts DEALER_HIT
   end
 
   def show_assets(last_round, player, dealer)

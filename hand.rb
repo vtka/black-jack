@@ -17,12 +17,9 @@ class Hand
     cards.count >= GameRules::MAX_CARDS
   end
 
-  def add_card(deal_card)
-    unless max_cards?
-      @cards << deal_card
-    else
-      raise Hand::MAX_CARD_WARNING
-    end
+  def add_card(card)
+    raise Hand::MAX_CARD_WARNING if max_cards?
+    @cards << card
   end
 
   private

@@ -7,7 +7,7 @@ class Deck
   end
 
   def deal_card
-    @deck.delete(@deck.sample)
+    @deck.pop
   end
 
   def fill_deck
